@@ -17,5 +17,21 @@
   const { Component } = React;
   const root = document.querySelector('#root');
   render(React.createElement('hr'), root);
+
+
+  // need to import products, offerings and companies
+  class App extends Component{
+    constuctor(){
+      super();
+      this.state ={
+        //??
+      }
+    }
+    async componentDidMount(){
+      const companies = (await axios.get('https://acme-users-api-rev.herokuapp.com/api/companies')).data;
+      const products = (await axios.get('https://acme-users-api-rev.herokuapp.com/api/products')).data;
+      const offerings = (await axios.get('https://acme-users-api-rev.herokuapp.com/api/offerings')).data;
+    }
+  }
   </script>
 </html>
