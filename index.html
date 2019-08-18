@@ -31,7 +31,11 @@
       const companies = (await axios.get('https://acme-users-api-rev.herokuapp.com/api/companies')).data;
       const products = (await axios.get('https://acme-users-api-rev.herokuapp.com/api/products')).data;
       const offerings = (await axios.get('https://acme-users-api-rev.herokuapp.com/api/offerings')).data;
+      this.setState({ companies, products, offerings });
     }
+    render(){
+        const { products, companies, offerings } = this.state;
   }
+  render (<App />, root);
   </script>
 </html>
