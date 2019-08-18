@@ -9,7 +9,6 @@
   </head>
   <body>
       <div id="root"></div>
-  </body>
   <script type="text/babel">
 
   const { HashRouter, Switch, Link, Route, Redirect } = ReactRouterDOM;
@@ -42,11 +41,11 @@
 
 
   // need to import products, offerings and companies
-  class App extends React.Component{
+  class App extends Component{
     constuctor(){
       super();
       this.state ={
-        //??
+        products : []
       }
     }
     async componentDidMount(){
@@ -57,7 +56,19 @@
     }
     render(){
         const { products, companies, offerings } = this.state;
+    return(
+      <HashRouter>
+        <Route component={ Nav } />
+        <Switch>
+         <Route path='/home' component={ Home } />
+         <Route path='/products' component={ Products } />
+         <Redirect to='/home' />
+        </Switch>
+        </HashRouter>
+     );
+    }
   }
   render (<App />, root);
   </script>
+  </body>
 </html>
