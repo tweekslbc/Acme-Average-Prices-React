@@ -1,86 +1,98 @@
 <html lang="en">
   <head>
-      <meta charset="UTF-8">
-      <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-      <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router-dom/5.0.1/react-router-dom.js"></script>
-      <title> Acme Product Averages React </title>
-  <style>
-  nav {
-      display: flex;
-      justify-content: space-around;
-      padding: 1rem 0 0 0;
-    }
-
-  </style>
-    </head>
+    <meta charset="UTF-8" />
+    <script
+      src="https://unpkg.com/react@16/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router-dom/5.0.1/react-router-dom.js"></script>
+    <title>Acme Product Averages React</title>
+    <style>
+      nav {
+        display: flex;
+        justify-content: space-around;
+        padding: 1rem 0 0 0;
+      }
+    </style>
+  </head>
 
   <body>
-      <div id="root"></div>
-  <script type="text/babel">
+    <div id="root"></div>
+    <script type="text/babel">
+      const { HashRouter, Switch, Link, Route, Redirect } = ReactRouterDOM;
+      const { render } = ReactDOM;
+      const { Component } = React;
+      const root = document.querySelector("#root");
+      render(React.createElement("hr"), root);
 
-  const { HashRouter, Switch, Link, Route, Redirect } = ReactRouterDOM;
-  const { render } = ReactDOM;
-  const { Component } = React;
-  const root = document.querySelector('#root');
-  render(React.createElement('hr'), root);
+      const Home = () => {
+        return <h1>Home</h1>;
+      };
 
-  const Home = ()=> {
-        return(
-        <h1>Home</h1>
-        );
-      }
+      //need to display, in order: product name, sugg price, Average price, lowest price and what company offers lowest
+      //HR between each set
+      const Products = () => {
+        return <h1>Products</h1>;
+      };
 
-//need to display, in order: product name, sugg price, Average price, lowest price and what company offers lowest
-//HR between each set
-      const Products = ()=> {
-        return(
-        <h1>Products</h1>
-        );
-      }
-
-      const Nav = (props)=> {
+      const Nav = props => {
         const path = props.location.pathname;
-        return(
+        return (
           <nav>
-              <Link to='/home' className= {path === '/home' ? 'selected': ''}>Home</Link>
-              <Link to='/products' className= {path === '/products' ? 'selected': ''}>Products</Link>
+            <Link to="/home" className={path === "/home" ? "selected" : ""}>
+              Home
+            </Link>
+            <Link
+              to="/products"
+              className={path === "/products" ? "selected" : ""}
+            >
+              Products
+            </Link>
           </nav>
         );
       };
 
-
-  // need to import products, offerings and companies
-  class App extends React.Component{
-    constructor(){
-      super();
-      this.state ={
-        products : []
+      // need to import products, offerings and companies
+      class App extends React.Component {
+        constructor() {
+          super();
+          this.state = {
+            products: []
+          };
+        }
+        async componentDidMount() {
+          const companies = (await axios.get(
+            "https://acme-users-api-rev.herokuapp.com/api/companies"
+          )).data;
+          const products = (await axios.get(
+            "https://acme-users-api-rev.herokuapp.com/api/products"
+          )).data;
+          const offerings = (await axios.get(
+            "https://acme-users-api-rev.herokuapp.com/api/offerings"
+          )).data;
+          this.setState({ companies, products, offerings });
+        }
+        render() {
+          const { products, companies, offerings } = this.state;
+          return (
+            <HashRouter>
+              <Switch>
+                <Route component={Nav} />
+                <Route path="/home" component={Home} />
+                <Route path="/products" component={Products} />
+                <Redirect to="/home" />
+              </Switch>
+            </HashRouter>
+          );
+        }
       }
-    }
-    async componentDidMount(){
-      const companies = (await axios.get('https://acme-users-api-rev.herokuapp.com/api/companies')).data;
-      const products = (await axios.get('https://acme-users-api-rev.herokuapp.com/api/products')).data;
-      const offerings = (await axios.get('https://acme-users-api-rev.herokuapp.com/api/offerings')).data;
-      this.setState({ companies, products, offerings });
-    }
-    render(){
-        const { products, companies, offerings } = this.state;
-    return(
-      <HashRouter>
-        <Route component={ Nav } />
-        <Switch>
-         <Route path='/home' component={ Home } />
-         <Route path='/products' component={ Products } />
-         <Redirect to='/home' />
-        </Switch>
-        </HashRouter>
-     );
-    }
-  }
-  render (<App />, root);
-  </script>
+      render(<App />, root);
+    </script>
   </body>
 </html>
