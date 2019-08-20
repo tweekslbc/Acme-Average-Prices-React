@@ -37,8 +37,17 @@
 
       //need to display, in order: product name, sugg price, Average price, lowest price and what company offers lowest
       //HR between each set
-      const Products = () => {
-        return <h1>Products</h1>;
+      const Products = props => {
+        const data = props.data;
+        return (
+          <div>
+            <h1>Products</h1>
+            <ul>
+              {data &&
+                data.map((product, idx) => <li key={idx}> {product.name} </li>)}
+            </ul>
+          </div>
+        );
       };
 
       const Nav = props => {
@@ -76,17 +85,24 @@
           const offerings = (await axios.get(
             "https://acme-users-api-rev.herokuapp.com/api/offerings"
           )).data;
-          this.setState({ companies, products, offerings });
+          this.setState({ companies, products, offerings }, () => console.log(this.state));
         }
         render() {
           const { products, companies, offerings } = this.state;
           return (
             <HashRouter>
+               <Route
+                   render={location => (
+                  <Nav products={products} location={location} />
+                )}
+              />
               <Switch>
-                <Route component={Nav} />
-                <Route path="/home" component={Home} />
-                <Route path="/products" component={Products} />
-                <Redirect to="/home" />
+                <Route
+                  path="/products"
+                  render={(props) => <Products data={ products } {...props}/>}
+                />
+                <Route exact path="/home" component={ Home } />
+                <Route exact path="/" component={ Products } />
               </Switch>
             </HashRouter>
           );
