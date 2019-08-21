@@ -19,6 +19,11 @@
         justify-content: space-around;
         padding: 1rem 0 0 0;
       }
+      li {
+        display:flex
+        justify-content: space-around;
+
+      }
     </style>
   </head>
 
@@ -44,7 +49,10 @@
             <h1>Products</h1>
             <ul>
               {data &&
-                data.map((product, idx) => <li key={idx}> {product.name} </li>)}
+                data.map((product, idx) => <li key={idx}> Product: {product.name }
+                <div> Suggested Price: ${ product.suggestedPrice}</div>
+                <hr/> </li>
+                )}
             </ul>
           </div>
         );
